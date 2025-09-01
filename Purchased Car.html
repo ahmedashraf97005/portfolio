@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project Example</title>
+    <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Prism.js CSS & JS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const section = document.querySelector(".description-section");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                section.classList.add("active");
+              } else {
+                section.classList.remove("active"); // عشان يتكرر لما تخرج وترجع
+              }
+            });
+          },
+          { threshold: 0.3 }
+        );
+
+        observer.observe(section);
+      });
+      
+      document.addEventListener("DOMContentLoaded", function () {
+        const titles = document.querySelectorAll(".section-title");
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("title-active");
+              } else {
+                entry.target.classList.remove("title-active");
+              }
+            });
+          },
+          { threshold: 0.3 }
+        );
+
+        titles.forEach((title) => {
+          observer.observe(title);
+        });
+      });
+
+
+      fetch("images/Covid-19/Covid-19.sql")
+        .then(res => res.text())
+        .then(data => {
+          // اعرض نسخة مختصرة في preview
+          document.getElementById("codePreview").textContent = data;
+
+          // اعرض النسخة الكاملة في modal
+          document.getElementById("codeFull").textContent = data;
+
+          // لو عايز تلوينه بالـ Prism.js
+          Prism.highlightAll();
+        });
+
+      function openCodeModal() {
+        document.getElementById("codeModal").style.display = "block";
+
+        // 👇 ده الجديد: يمنع Scroll الصفحة نفسها
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeCodeModal() {
+        document.getElementById("codeModal").style.display = "none";
+
+        // 👇 ده الجديد: يرجع Scroll الصفحة بعد الغلق
+        document.body.style.overflow = "";
+      }
+
+    </script>
+
+    <style>
+      /* ===== Hero Section ===== */
+      .background_Edit {
+        background-image: url(images/Purchased\ Car/Dashboard.png);
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: relative;
+        color: white;
+        text-shadow: 0px 4px 15px rgba(0, 0, 0, 1); /* ظل عميق */
+        justify-content: center;
+        align-items: center;
+        height: 70vh; /* ارتفاع ملء الشاشة */
+        overflow: hidden; /* يمنع أي تمدد غريب */
+
+      }
+
+      /* الطبقة اللي فوق الصورة */
+      .background_Edit::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(6px);        /* بلور */
+        background: rgba(0, 0, 0, 0.8);   /* سواد خفيف */
+        z-index: 1;
+        transition: all 0.4s ease;        /* حركة ناعمة */
+      }
+      .background_Edit > * {
+        position: relative;
+        z-index: 2; /* يخلي النص فوق الطبقة */
+      }
+
+      /* ===== General Section Styling ===== */
+      section {
+        padding: 60px 0;
+        margin: 60px 0; /* مسافة للأجهزة الكبيرة */
+      }
+      .first_section{
+        margin: 0px 0 !important; /* مسافة للأجهزة الكبيرة */
+      }
+      section:nth-of-type(even) {
+        background: #f8f9fa; /* sections alternate background */
+      }
+
+      .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      @media (max-width: 768px) {
+        section {
+          margin: 40px 0; /* مسافة أقل للموبايل */
+        }
+      }
+
+      /* ===== Project Images ===== */
+      .project-img {
+        width: 600px;          /* العرض اللي تختاره */
+        height: 400px;         /* الارتفاع اللي تختاره */
+        object-fit: contain;
+        background-color: #ffffff00; /* أو أي لون خلفية يملأ الفراغ */
+        border-radius: 15px;
+        margin-top: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      }
+
+      /* بلوك الكود */
+      .code-block {
+        width: 1000px;          /* 👈 نفس عرض الصورة */
+        height: 600px;         /* 👈 نفس ارتفاع الصورة */
+        background: #1e1e1e;
+        color: #fff;
+        padding: 0px;
+        border-radius: 15px;
+        font-family: "Fira Code", monospace;
+        font-size: 0.9rem;
+        overflow-y:hidden;
+        overflow-x:hidden;
+        cursor: pointer;
+        text-align: left;
+      }
+      .code-modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 2000;
+        padding: 0px;
+        overflow-y: auto;    /* 👈 يخلي فيه scroll */
+      }
+      .code-modal-content {
+        background: #1e1e1e;
+        color: #fff;
+        padding: 0px;
+        border-radius: 10px;
+        max-width: 90%;
+        margin: auto;
+        white-space: pre-wrap;
+        font-family: "Fira Code", monospace;
+        font-size: 1rem;
+        max-height: 90vh;
+        
+      }
+      .code-close {
+        position: absolute;
+        top: 20px; right: 40px;
+        color: #fff;
+        font-size: 2rem;
+        cursor: pointer;
+      }
+
+      .project-image-block {
+        width: 600px;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+      }
+
+      .project-image-block img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 15px;
+      }
+
+      .project-code-block {
+        width: 1000px;
+        height: 600px;
+        display: flex;
+        background-color: #ffffff;
+        color: #fff;
+        padding: 0px;
+        border-radius: 10px;
+        margin: 0 auto;
+      }
+
+      /* الموبايل (شاشات أقل من 768px) */
+      @media (max-width: 768px) {
+        .project-image-block {
+          width: 100%;
+          height: auto; /* تخلي الصورة تتأقلم مع العرض */
+        }
+
+        .project-image-block img {
+          height: auto;
+        }
+
+        .project-code-block {
+          width: 100%;
+          height: 100%; /* تسيبه ثابت نسبيًا لكن أضيق */
+        }
+      }
+
+      /* ===== Skills ===== */
+      .skill-badge {
+        background: #000000;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-align: center;
+      }
+
+      /* تأثير عند المرور عليها */
+      .skill-badge:hover {
+        background: #007bff;
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      /* موبايل: تصغير الحجم والتباعد */
+      @media (max-width: 768px) {
+        .skill-badge {
+          padding: 8px 16px;
+          font-size: 0.9rem;
+        }
+      }
+
+      /* ===== Buttons Section ===== */
+      .btn-lg {
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+      }
+      .hero-title {
+        transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
+        transform: scale(0.9);
+        display: inline-block;
+        cursor:default;
+      }
+
+      .hero-title:hover {
+        transform: scale(1); /* تكبير أكبر شوية */
+        color: #ffd700;         /* لون ذهبي عند hover */
+        text-shadow: 0px 4px 15px rgba(0, 0, 0, 1); /* ظل عميق */
+      }
+
+      /* لما نعمل hover على السيكشن */
+      .hero-section:hover::before {
+        backdrop-filter: blur(10px);      /* بلور أكتر */
+        background: rgba(0, 0, 0, 1);  /* سواد أكتر */
+      }
+
+      /* ---------------------------------------------------------------------------------*/
+
+      /* خلفية خفيفة للسيكشن */
+      .description-section {
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f9f9f9, #f1f1f1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* العنوان */
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        position: relative;
+        display: inline-block;
+        margin-bottom: 30px;
+        opacity: 0;
+        
+        transition: all 1s ease;
+      }
+
+      /* الخط تحت العنوان */
+      .section-title::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -10px;
+        transform: translateX(-50%);
+        width: 0;
+        height: 4px;
+        background: #4e47cc;
+        border-radius: 2px;
+        transition: width 1s ease;
+      }
+
+      /* النص */
+      .description-section p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: auto;
+        line-height: 1.8;
+        color: #333;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 1s ease;
+        transition-delay: 0.5s; /* يطلع بعد العنوان */
+      }
+
+      /* حالة ظهور العناصر */
+      .description-section.active .section-title {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .description-section.active .section-title::after {
+        width: 100%;
+      }
+
+      .description-section.active p {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      
+      .section-title.title-active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .section-title.title-active::after {
+        width: 100%;
+      }
+
+    </style>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <main>
+
+      <!-- Section 1: Hero -->
+      <section class="background_Edit text-center hero-section first_section">
+        <div class="d-flex align-items-center justify-content-center h-100">
+          <h1 class="display-3 fw-bold hero-title">Dashboard For Purchased Car</h1>
+        </div>
+      </section>
+
+      <!-- Section 2: Description -->
+      <section class="description-section">
+        <div class="container text-center">
+          <h2 class="section-title">Project Description</h2>
+          <p style="font-size: 1.75em; font-weight: bold; margin-top: 20px; margin-bottom: 10px;">
+            <strong>Stack:</strong> CSV . Excel · Power Query
+          </p>
+          <p>
+            This project analyzes customer demographics and behaviors related to car purchases.
+            The raw data, sourced from a CSV file, included fields such as <em>Marital Status</em>, <em>Gender</em>,
+            <em>Income</em>, <em>Children</em>, <em>Education</em>, <em>Occupation</em>, <em>Home Ownership</em>,
+            <em>Cars Owned</em>, <em>Commute Distance</em>, <em>Region</em>, <em>Age</em>, and <em>Purchased Bike</em>.
+            Using Excel and Power Query, I transformed and cleaned the dataset before building an interactive Excel dashboard.
+          </p>
+
+          <p style="font-size: 1.75em; font-weight: bold; margin-top: 20px; margin-bottom: 10px;">
+            What the dashboard shows
+          </p>
+          <p>• Percentage of purchased cars by occupation (Clerical, Management, Manual, Professional, Skilled Manual).</p>
+          <p>• Distribution of car purchases by age groups, highlighting peak buying age between 30–45 years.</p>
+          <p>• Relationship between cars already owned and the likelihood of purchasing a new one.</p>
+          <p>• Car purchases by income brackets, showing clear correlation between middle-income groups and higher car purchases.</p>
+          <p>• Impact of education level on car ownership decisions (Bachelors, Graduate Degree, High School, etc.).</p>
+          <p>• Commute distance as a factor in car purchase behavior (0–1 miles, 1–2 miles, 5–10 miles, 10+ miles).</p>
+
+          <p style="font-size: 1.75em; font-weight: bold; margin-top: 20px; margin-bottom: 10px;">
+            Outcome & value
+          </p>
+          <p>
+            The dashboard reveals how income, education, occupation, and commute distance influence car purchase decisions.
+            It provides marketing and sales teams with actionable insights to segment customers more effectively,
+            identify high-potential buyer groups, and design targeted promotional strategies.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 3: Project Images -->
+      <section >
+        <div class="container text-center">
+          <h2 class="section-title">Project Screenshots</h2>
+          <div class="mb-5 text-center">
+          <h5 class="fw-bold mb-3 mt-4">📌Row Data File</h5>
+          <iframe width="600" height="400" frameborder="0" scrolling="no" src="https://1drv.ms/x/c/33ac765815bc30f4/IQQuaYoIaPi4TrQoKWu2bvlcAYLDYr8E4f0GEUUJMRHQ8dg?em=2&wdAllowInteractivity=False&wdHideGridlines=True&wdHideHeaders=True&wdDownloadButton=True&wdInConfigurator=True&wdInConfigurator=True"></iframe>
+
+
+          <div class="mb-5 text-center">
+          <h5 class="fw-bold mb-3 mt-4">📌 Dashboard Screenshot</h5>
+          <div class="project-image-block mx-auto">
+            <img src="images/Purchased Car/Dashboard.png" 
+                alt="Project Screenshot 1" 
+                class="project-img w-100"
+                style="cursor:pointer"
+                data-bs-toggle="modal" data-bs-target="#imageModal2">
+          </div>
+        </div>
+        <!-- Modal صورة -->
+          <div class="modal fade" id="imageModal2" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+              <div class="modal-content bg-dark">
+                <button type="button" class="btn-close btn-close-white ms-auto m-3" data-bs-dismiss="modal"></button>
+                <img src="images/Purchased Car/Dashboard.png" class="w-100 h-100 object-fit-contain">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Skills -->
+      <section>
+        <div class="container text-center">
+          <h2 class="section-title">Skills</h2>
+          <div class="d-flex flex-wrap gap-3 justify-content-center w-100">
+            <span class="skill-badge">Excel</span>
+            <span class="skill-badge">Power Query</span>
+            <!-- <span class="skill-badge">Dax Language</span> -->
+            <!-- <span class="skill-badge">SQL</span> -->
+            <!-- <span class="skill-badge">Power BI</span> -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Links -->
+      <section>
+        <div class="container text-center">
+          <h2 class="section-title">Links</h2>
+          <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="https://1drv.ms/x/c/33ac765815bc30f4/EfQVQ7fPr71PvY1bGR97D7IBivPrRPHjBuZViv284UcjPw?e=8D1L5o" class="btn btn-primary btn-lg">Dashboard</a>
+            <!-- <a href="#" class="btn btn-outline-secondary btn-lg">Live Demo</a> -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+    <script src="assets/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
